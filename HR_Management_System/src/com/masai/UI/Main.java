@@ -107,11 +107,11 @@ public class Main {
     			break;
     			
     		case 3:
-//    		    See Status Of Leave
+//    			EmployeeUI.leavesHistory();
     			break;
     			
     		case 4:
-//    			See Leaves History
+   			EmployeeUI.leavesHistory();
     			break;
     			
     		case 5:

@@ -2,6 +2,7 @@ package com.masai.UI;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Scanner;
 
 import com.masai.DAO.EmployeeOperationDAO;
@@ -120,12 +121,40 @@ public class EmployeeUI {
 			
 			 days = (int) ChronoUnit.DAYS.between(from, to);
 		}
-		Leave leave = new LeaveImpl(empid,from,to,null,days,null);
+		Leave leave = new LeaveImpl(empid,from,to,"Pending",days,null);
 
 		EmployeeOperationDAO dao = new EmployeeOperationDAOImpl();
 		
 		dao.applyForLeave(leave);
 
+		
+	}
+	
+	
+	public static void leavesHistory() {
+		EmployeeOperationDAO dao = new EmployeeOperationDAOImpl();
+		
+		try {
+			List<Leave> list = dao.getLeavesHistory();
+			
+			for(Leave i : list) {
+				System.out.println();
+				System.out.println("Date From : "+i.getFrom());
+				System.out.println("Date To : "+i.getTo());
+				System.out.println("No. of days : "+i.getDays());
+				System.out.println("Status :"+i.getStatus());
+				System.out.println("Remark :"+i.getRemark());
+				
+				System.out.println();
+				System.out.println("=======================================");
+			}
+			
+			
+		} catch (SomeThingWentWrongException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		
 		
 	}
 	

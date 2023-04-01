@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.masai.DTO.Employee;
 import com.masai.DTO.Leave;
+import com.masai.DTO.LeaveImpl;
 import com.masai.Exceptions.SomeThingWentWrongException;
 
 public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
@@ -184,6 +187,42 @@ public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+		
+	}
+
+	@Override
+	public List<Leave> getLeavesHistory() throws SomeThingWentWrongException {
+		List<Leave> list = new ArrayList<>();
+		Connection con = null;
+		
+		try {
+			con = DBUtils.getConnectionTodatabase();
+			String query = "SELECT from_date, to_date, status, days, remark FROM Leaves WHERE employeeID = "+UserLoggedIn.loggedInUser+"";
+			PreparedStatement ps = con.prepareStatement(query);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if(DBUtils.isResultSetEmpty(rs)) {
+				System.out.println("No record found");
+			}else
+			{
+				while(rs.next()) {				
+					list.add(new LeaveImpl(UserLoggedIn.loggedInUser,rs.getDate(1).toLocalDate(),rs.getDate(2).toLocalDate(),rs.getString(3),rs.getInt(4),rs.getString(5)));
+				}
+				
+			}
+			
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new SomeThingWentWrongException("Something went wrong");
+		}
+		
+		try {
+			DBUtils.closeConnection(con);
+		} catch (SQLException e) {
+			
+		}
+		return list;
 		
 	}
 }
