@@ -37,4 +37,6 @@ Java Based Application to control and manage the data of the Employees and Depar
 * Java
 * MySQL
 
- ![picture alt](https://dbdiagram.io/d/6429a58f5758ac5f1726152c "ER Diagram of Database")
+
+## ER Diagram of Database
+ ![picture alt](https://github.com/vd-24/lucid-sand-4612/blob/main/ER.png "ER Diagram of Database")
