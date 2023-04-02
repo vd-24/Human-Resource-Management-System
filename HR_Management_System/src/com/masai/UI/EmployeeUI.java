@@ -5,12 +5,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Scanner;
 
+import com.masai.DAO.EmployeeDAO;
+import com.masai.DAO.EmployeeDAOImpl;
 import com.masai.DAO.EmployeeOperationDAO;
 import com.masai.DAO.EmployeeOperationDAOImpl;
 import com.masai.DAO.UserLoggedIn;
 import com.masai.DTO.EmployeeImpl;
 import com.masai.DTO.Leave;
 import com.masai.DTO.LeaveImpl;
+import com.masai.Exceptions.RecordNotFoundException;
 import com.masai.Exceptions.SomeThingWentWrongException;
 
 public class EmployeeUI {
@@ -38,12 +41,16 @@ public class EmployeeUI {
 		dao.logOut();
 	}
 	
-	public static void deleteAccount() throws SomeThingWentWrongException {
+	public static void deleteAccount(){
 		EmployeeOperationDAO dao = new EmployeeOperationDAOImpl();
-		dao.deleteAccount();
+		try {
+			dao.deleteAccount();
+		} catch (SomeThingWentWrongException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
-	public static void updateAccountDetails(Scanner sc) throws SomeThingWentWrongException {
+	public static void updateAccountDetails(Scanner sc){
 		int choice  = 0;
 		EmployeeImpl emp = new EmployeeImpl(null, null, 0, null, null, 0, null);
 		EmployeeOperationDAO dao = new EmployeeOperationDAOImpl();
@@ -60,14 +67,22 @@ public class EmployeeUI {
 				System.out.println("Enter New Name :");
 				String name = sc.next();
 				emp.setEmployeeName(name);
-				dao.updateEmployeeName(emp);
+				try {
+					dao.updateEmployeeName(emp);
+				} catch (SomeThingWentWrongException e) {
+					System.out.println(e.getMessage());
+				}
 				break;
 				
 			case 2:
 				System.out.println("Enter New Username :");
 				String username=sc.next();
 				emp.setUsername(username);
-				dao.updateEmployeeUsername(emp);
+				try {
+					dao.updateEmployeeUsername(emp);
+				} catch (SomeThingWentWrongException e) {
+					System.out.println(e.getMessage());
+				}
 				break;
 				
 			case 3:
@@ -83,7 +98,11 @@ public class EmployeeUI {
 				}
 				emp.setPassword(newPassConfirm);
 				
-				dao.updatePassword(emp);
+				try {
+					dao.updatePassword(emp);
+				} catch (SomeThingWentWrongException e) {
+					System.out.println(e.getMessage());
+				}
 				break;
 				
 			case 0:
@@ -102,7 +121,7 @@ public class EmployeeUI {
 		
 	}
 
-	public static void applyForLeave(Scanner sc) throws SomeThingWentWrongException {
+	public static void applyForLeave(Scanner sc){
 		int empid = UserLoggedIn.loggedInUser;
 		System.out.println("Enter Starting Date (YYYY-MM-DD) :");
 		LocalDate from = LocalDate.parse(sc.next());
@@ -125,7 +144,11 @@ public class EmployeeUI {
 
 		EmployeeOperationDAO dao = new EmployeeOperationDAOImpl();
 		
-		dao.applyForLeave(leave);
+		try {
+			dao.applyForLeave(leave);
+		} catch (SomeThingWentWrongException e) {
+			System.out.println(e.getMessage());
+		}
 
 		
 	}
@@ -150,12 +173,50 @@ public class EmployeeUI {
 			}
 			
 			
-		} catch (SomeThingWentWrongException e) {
+		} catch (SomeThingWentWrongException | RecordNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
 		
 		
 		
+	}
+
+	public static void showSalary() {
+		EmployeeOperationDAO dao = new EmployeeOperationDAOImpl();
+		
+		int salary;
+		try {
+			salary = dao.showSalaryPerMonth();
+			
+			int annualSalary = salary*12;
+			System.out.println();
+			System.out.println("Your Total Monthly Salary Is: "+salary);
+			
+			System.out.println("Your Total Annual Salary Is: "+ annualSalary);
+			System.out.println();
+		} catch (RecordNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
+	
+	}
+
+	public static void leavesStatus() {
+	  EmployeeOperationDAO dao = new EmployeeOperationDAOImpl();
+		Leave leave;
+		try {
+			leave = dao.getLeaveStatus();
+			System.out.println("-----------------------------------");
+			System.out.println("Start Date : "+leave.getFrom());
+			System.out.println("End Date   : "+leave.getTo());
+			System.out.println("No.of days : "+leave.getDays());
+			System.out.println("Status     : "+leave.getStatus());
+			System.out.println("Remark     : "+leave.getRemark());
+			System.out.println("------------------------------------");
+		} catch (RecordNotFoundException e) {
+
+			System.out.println(e.getMessage());
+		}
+	
 	}
 	
 }

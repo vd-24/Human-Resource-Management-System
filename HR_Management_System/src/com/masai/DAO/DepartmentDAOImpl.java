@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import com.masai.DTO.Department;
 import com.masai.DTO.DepartmentImpl;
+import com.masai.Exceptions.RecordNotFoundException;
 import com.masai.Exceptions.SomeThingWentWrongException;
 
 public class DepartmentDAOImpl implements DepartmentDAO{
@@ -41,7 +42,7 @@ public class DepartmentDAOImpl implements DepartmentDAO{
 		} catch (SQLException e) {}
 	}
 	
-	public List<Department> getListOfDepartment() throws SomeThingWentWrongException {
+	public List<Department> getListOfDepartment() throws SomeThingWentWrongException, RecordNotFoundException {
 		
 		
 		Connection con = null;
@@ -54,8 +55,7 @@ public class DepartmentDAOImpl implements DepartmentDAO{
 			ResultSet rs = ps.executeQuery();
 			
 			if(DBUtils.isResultSetEmpty(rs)) {
-				System.out.println("No Records Found");
-				DBUtils.closeConnection(con);
+				throw new RecordNotFoundException("No Rocord Found");
 			}else {
 				List<Department> list = new ArrayList<>();
 				while(rs.next()) {
@@ -64,7 +64,6 @@ public class DepartmentDAOImpl implements DepartmentDAO{
 				DBUtils.closeConnection(con);
 				return list;
 			}
-			return null;
 			
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new SomeThingWentWrongException("Something went wrong");
@@ -103,7 +102,7 @@ public class DepartmentDAOImpl implements DepartmentDAO{
 			} catch (SQLException e) {}
 		}
 	
-	public List<Integer> printDeptOptions() throws SomeThingWentWrongException {
+	public List<Integer> printDeptOptions() throws SomeThingWentWrongException, RecordNotFoundException {
 		Connection con = null;
 		List<Integer> list = new ArrayList<>();
 		try {
@@ -114,8 +113,7 @@ public class DepartmentDAOImpl implements DepartmentDAO{
 			ResultSet rs = ps.executeQuery();
 			
 			if(DBUtils.isResultSetEmpty(rs)) {
-				System.out.println("No Records Found");
-				DBUtils.closeConnection(con);
+				throw new RecordNotFoundException("No Record Found");
 			}else {
 			
 				while(rs.next()) {

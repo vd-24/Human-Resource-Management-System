@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.masai.DTO.Employee;
 import com.masai.DTO.Leave;
+import com.masai.Exceptions.RecordNotFoundException;
 import com.masai.Exceptions.SomeThingWentWrongException;
 
 public interface EmployeeOperationDAO {
@@ -14,5 +15,7 @@ public interface EmployeeOperationDAO {
 	public void updatePassword(Employee emp) throws SomeThingWentWrongException;
 	public void updateEmployeeUsername(Employee emp) throws SomeThingWentWrongException;
 	public void applyForLeave(Leave leave) throws SomeThingWentWrongException;
-	public List<Leave> getLeavesHistory() throws SomeThingWentWrongException;
+	public List<Leave> getLeavesHistory() throws SomeThingWentWrongException, RecordNotFoundException;
+	public int showSalaryPerMonth() throws RecordNotFoundException;
+	public Leave getLeaveStatus() throws RecordNotFoundException;
 }

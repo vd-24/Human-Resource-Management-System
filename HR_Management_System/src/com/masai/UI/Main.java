@@ -6,7 +6,7 @@ import com.masai.Exceptions.SomeThingWentWrongException;
 
 public class Main {
 
-	private static void adminLogin(Scanner sc) throws SomeThingWentWrongException {
+	private static void adminLogin(Scanner sc){
 		
 		System.out.println("Enter Username : ");
 		String username = sc.next();
@@ -23,7 +23,7 @@ public class Main {
 		
 	}
 	
-	private static void adminMenu(Scanner sc) throws SomeThingWentWrongException {
+	private static void adminMenu(Scanner sc){
 		int choice=0;
 		
 		do {
@@ -55,7 +55,7 @@ public class Main {
 				break;
 				
 			case 6:
-				HROperationsUI.leaveApplication();
+				HROperationsUI.leaveApplication(sc);
 				break;
 				
 			case 7:
@@ -87,7 +87,7 @@ public class Main {
 
     }
 	
-    private static void employeeLogin(Scanner sc) throws SomeThingWentWrongException {
+    private static void employeeLogin(Scanner sc){
     	if(EmployeeUI.userLogIn(sc)==false) { 
     		return;
     	}
@@ -107,7 +107,7 @@ public class Main {
     			break;
     			
     		case 3:
-//    			EmployeeUI.leavesHistory();
+    			EmployeeUI.leavesStatus();
     			break;
     			
     		case 4:
@@ -115,7 +115,7 @@ public class Main {
     			break;
     			
     		case 5:
-//    			See Total Salary
+    			EmployeeUI.showSalary();
     			break;
     			
     		case 6:
@@ -140,7 +140,7 @@ public class Main {
     private static void displayEmployeeOption() {
     	System.out.println("1 : Update Account Details");
     	System.out.println("2 : Apply For Leave");
-    	System.out.println("3 : See status of leave");
+    	System.out.println("3 : See status of your last applied leave");
     	System.out.println("4 : See Leaves History");
     	System.out.println("5 : See Salary Details");
     	System.out.println("6 : Delete Account");
@@ -148,7 +148,7 @@ public class Main {
 
     }
     
-	public static void main(String[] args) throws SomeThingWentWrongException {
+	public static void main(String[] args){
 		Scanner sc = new Scanner(System.in);
 		System.out.println("WELCOME......");
 		int choice =0;

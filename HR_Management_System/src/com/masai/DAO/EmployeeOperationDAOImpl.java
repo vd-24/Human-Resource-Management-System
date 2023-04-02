@@ -12,6 +12,7 @@ import java.util.List;
 import com.masai.DTO.Employee;
 import com.masai.DTO.Leave;
 import com.masai.DTO.LeaveImpl;
+import com.masai.Exceptions.RecordNotFoundException;
 import com.masai.Exceptions.SomeThingWentWrongException;
 
 public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
@@ -68,10 +69,7 @@ public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
 		}
 		try {
 			DBUtils.closeConnection(con);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {}
 		
 	}
 
@@ -94,10 +92,7 @@ public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
 		}
 		try {
 			DBUtils.closeConnection(con);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {}
 	}
 
 	@Override
@@ -119,10 +114,7 @@ public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
 		}
 		try {
 			DBUtils.closeConnection(con);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {}
 	}
 
 	@Override
@@ -144,9 +136,7 @@ public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
 		}
 		try {
 			DBUtils.closeConnection(con);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+		} catch (SQLException e) {}
 	}
 
 	@Override
@@ -167,7 +157,7 @@ public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
 			ps.setInt(1, leave.getEmpID());
 			ps.setDate(2,Date.valueOf(leave.getFrom()));
 			ps.setDate(3,Date.valueOf(leave.getTo()));
-			ps.setString(4, null);
+			ps.setString(4, leave.getStatus());
 			ps.setInt(5,leave.getDays());
 			ps.setString(6, null);
 			
@@ -184,14 +174,12 @@ public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
 		
 		try {
 			DBUtils.closeConnection(con);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+		} catch (SQLException e) {}
 		
 	}
 
 	@Override
-	public List<Leave> getLeavesHistory() throws SomeThingWentWrongException {
+	public List<Leave> getLeavesHistory() throws SomeThingWentWrongException, RecordNotFoundException {
 		List<Leave> list = new ArrayList<>();
 		Connection con = null;
 		
@@ -203,7 +191,7 @@ public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
 			ResultSet rs = ps.executeQuery();
 			
 			if(DBUtils.isResultSetEmpty(rs)) {
-				System.out.println("No record found");
+				throw new RecordNotFoundException("No record found");
 			}else
 			{
 				while(rs.next()) {				
@@ -224,5 +212,57 @@ public class EmployeeOperationDAOImpl implements EmployeeOperationDAO{
 		}
 		return list;
 		
+	}
+
+	@Override
+	public int showSalaryPerMonth() throws RecordNotFoundException {
+		Connection con = null;
+		int salary=0;
+		try {
+			con = DBUtils.getConnectionTodatabase();
+			String query = "SELECT salary_per_month FROM employee WHERE ID="+UserLoggedIn.loggedInUser+"";
+			PreparedStatement ps = con.prepareStatement(query);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if(DBUtils.isResultSetEmpty(rs)) {
+				throw new RecordNotFoundException("No Record Found");
+			}else {
+				rs.next();
+				salary = rs.getInt(1);
+			}
+		} catch (ClassNotFoundException | SQLException e) {}
+		
+		try {
+			DBUtils.closeConnection(con);
+		} catch (SQLException e) {}
+		return salary;
+	}
+
+	@Override
+	public Leave getLeaveStatus() throws RecordNotFoundException {
+		Connection con = null;
+		Leave leave=null;
+		try {
+			con = DBUtils.getConnectionTodatabase();
+			String query = "SELECT from_date, to_date, status, days, remark FROM Leaves WHERE EmployeeID = "+UserLoggedIn.loggedInUser+" ORDER BY from_date DESC LIMIT 1";
+			
+			PreparedStatement ps = con.prepareStatement(query);
+			
+			ResultSet rs = ps.executeQuery();
+			if(DBUtils.isResultSetEmpty(rs)) {
+				throw new RecordNotFoundException("No Record Found");
+			}else {
+					rs.next();
+					Leave temp = new LeaveImpl(UserLoggedIn.loggedInUser,rs.getDate(1).toLocalDate(),rs.getDate(2).toLocalDate(),rs.getString(3),rs.getInt(4),rs.getString(5));
+					 leave = temp;
+				}
+
+		} catch (ClassNotFoundException | SQLException e) {}
+		
+		try {
+			DBUtils.closeConnection(con);
+		} catch (SQLException e) {}
+		return leave;
 	}
 }

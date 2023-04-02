@@ -7,6 +7,7 @@ import com.masai.DAO.DepartmentDAO;
 import com.masai.DAO.DepartmentDAOImpl;
 import com.masai.DTO.Department;
 import com.masai.DTO.DepartmentImpl;
+import com.masai.Exceptions.RecordNotFoundException;
 import com.masai.Exceptions.SomeThingWentWrongException;
 
 public class DepartmentUI {
@@ -30,17 +31,18 @@ public class DepartmentUI {
 	
 	static void viewAllDepartments() {
 		DepartmentDAO dao = new DepartmentDAOImpl();
-		try {
-			List<Department>list = dao.getListOfDepartment();
-			for(Department i : list) {
-				System.out.println(i.getDeptId()+"  -  "+i.getDeptName());
-			}
+		
+			List<Department> list;
 			
-		} catch (SomeThingWentWrongException e) {
-			System.out.println("Something went wrong");
-		}
-		
-		
+			try {
+				list = dao.getListOfDepartment();
+				for(Department i : list) {
+					System.out.println(i.getDeptId()+"  -  "+i.getDeptName());
+				}
+			} catch (RecordNotFoundException | SomeThingWentWrongException e) {
+
+				System.out.println(e.getMessage());
+			}
 	}
 	
 	static void updateDepartmentName(Scanner sc) {
