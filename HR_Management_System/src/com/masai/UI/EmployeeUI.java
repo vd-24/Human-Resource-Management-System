@@ -87,10 +87,11 @@ public class EmployeeUI {
 				
 			case 3:
 				System.out.println("Enter New Password :");
-				String newPass=sc.next();
+				sc.nextLine();
+				String newPass=sc.nextLine();
 				
 				System.out.println("Confirm New Password :");
-				String newPassConfirm = sc.next();
+				String newPassConfirm = sc.nextLine();
 				
 				if(!newPass.equals(newPassConfirm)) {
 					System.out.println("Password doesn't match");

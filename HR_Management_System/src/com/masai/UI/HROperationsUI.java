@@ -21,7 +21,8 @@ public class HROperationsUI {
 		String employeeID = sc.next();
 		
 		System.out.println("Enter Employee Name : ");
-		String employeeName = sc.next();
+		sc.nextLine();
+		String employeeName = sc.nextLine();
 		
 		System.out.println("Choose Department From Following");
 		DepartmentDAO dao = new DepartmentDAOImpl();

@@ -16,7 +16,8 @@ public class DepartmentUI {
 		String deptID=sc.next();
 		
 		System.out.println("Enter Department Name");
-		String deptName=sc.next();
+		sc.nextLine();
+		String deptName=sc.nextLine();
 		
 		Department department = new DepartmentImpl(deptID,deptName);
 		
