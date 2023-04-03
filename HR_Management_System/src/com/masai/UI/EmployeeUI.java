@@ -21,9 +21,9 @@ public class EmployeeUI {
 
     	System.out.println("Enter Username(email)");
     	String username = sc.next();
-    	
+    	sc.nextLine();
     	System.out.println("Enter password");
-    	String password = sc.next();;
+    	String password = sc.nextLine();;
     	
     	EmployeeOperationDAO dao = new EmployeeOperationDAOImpl();
     	try {
